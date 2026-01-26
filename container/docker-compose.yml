@@ -1,0 +1,14 @@
+services:
+  rhel-base:
+    build:
+      context: .
+    container_name: rhel-base
+    hostname: rhel-base
+    privileged: true
+    tmpfs:
+      - /run
+      - /run/lock
+    ports:
+      - "2222:22"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
