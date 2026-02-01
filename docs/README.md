@@ -3,7 +3,6 @@
 Minimal RHEL (UBI9) container image with:
 - `lab` user and `root` credentials set
 - SSH server enabled
-- your `.bashrc` applied to `lab` and `root`
 
 ## Start/Stop
 
