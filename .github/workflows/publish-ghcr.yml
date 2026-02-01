@@ -43,4 +43,3 @@ jobs:
           tags: |
             ${{ steps.vars.outputs.image_name }}:latest
             ${{ steps.vars.outputs.image_name }}:${{ steps.vars.outputs.version_tag }}
-            ${{ steps.vars.outputs.image_name }}:single-architecture
