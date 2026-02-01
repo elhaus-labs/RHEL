@@ -2,8 +2,18 @@ FROM registry.access.redhat.com/ubi9/ubi
 
 RUN dnf -y --allowerasing --setopt=install_weak_deps=False --setopt=tsflags=nodocs install \
       bash \
+      coreutils \
+      findutils \
+      gawk \
+      grep \
+      initscripts \
+      iproute \
+      lsof \
+      net-tools \
+      nmap \
       openssh-server \
       openssh-clients \
+      procps-ng \
       sudo \
       systemd \
       systemd-udev \

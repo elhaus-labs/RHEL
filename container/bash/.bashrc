@@ -82,7 +82,16 @@ alias ns='nameserver'
 alias gateway="ip route | awk '/default/ {print \$3}' | cut -d' ' -f1-3"
 alias gw='gateway'
 alias net='ips; nameserver; gateway'
-alias linux='lsb_release -s -d'
+linux() {
+	if command -v lsb_release >/dev/null 2>&1; then
+		lsb_release -s -d
+	elif [ -r /etc/os-release ]; then
+		. /etc/os-release
+		echo "${PRETTY_NAME:-$NAME}"
+	else
+		uname -srv
+	fi
+}
 
 if ! command -v clear >/dev/null 2>&1; then
 	clear() { printf '\033c'; }
@@ -258,13 +267,26 @@ pushd() { [ "$#" -eq 0 ] && command pushd . || command pushd "$@"; }
 netstat(){ [ "$#" -eq 0 ] && command netstat -tulnp4 || command netstat "$@"; }
 
 tree() {
-	if [ "$#" -eq 0 ]; then
-		command tree -L 1 --dirsfirst -d --noreport
-	elif [ "$#" -eq 1 ]; then
-		command tree -L "$1" --dirsfirst -d --noreport
-	else
-		command tree "$@"
+	if command -v tree >/dev/null 2>&1; then
+		if [ "$#" -eq 0 ]; then
+			command tree -L 1 --dirsfirst -d --noreport
+		elif [ "$#" -eq 1 ]; then
+			command tree -L "$1" --dirsfirst -d --noreport
+		else
+			command tree "$@"
+		fi
+		return
 	fi
+
+	# Fallback: show a directory-only tree using find.
+	local depth=1
+	if [ "$#" -eq 1 ]; then
+		depth="$1"
+	elif [ "$#" -gt 1 ]; then
+		echo "tree: command not found (install 'tree' for full options)"
+		return 127
+	fi
+	find . -mindepth 1 -maxdepth "$depth" -type d -print | sed 's|^\./||'
 }
 
 if ! shopt -oq posix; then
